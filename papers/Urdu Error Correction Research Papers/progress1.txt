@@ -1,0 +1,62 @@
+Prework Identified Issues:
+- Wikipedia Corpus for Urdu and error infliction through a small dictionary like scheme for lemmas
+	issue: (1) the vocabulary used is not exhaustive therefore can result in overfitting and 	very 	low generalization on unseen real-world data. (2) They only produced incorrect 	data, whereas they could also keep some data where source and target both are identical 	(as done in the (jared et al) (3) they have used a subset of errors (only morphological) 	by filtering out relevant errors using ERRANT (and even subset of thos errors which I 	assume was done as there dataset was not large? idk), most importantly punctuation 	errors, spelling mistakes are not modelled.
+
+	solution: (1) found a dataset of 500k words and a LSTM based lemmatizer. We can build our 	own, dictionary of lemmatized words and all of the derived words found. The POS tagger 			can help us label the morphological information related to each word. This dictionary can 	be used to inflict errors on data. Moreover these words are not derived from the data 		itself so it can better generalize. (2) We will put around 5% of the data for partiiton 	as done in (jared et all). (3) We will also do (2) plus probabilistically perform 	spelling, etc errors by insertion, deletion or substitution (Jared et all uses some 	hueristic for propbability value)
+
+- Human annotated data. issue: the errors are not natural (which will mess up with the generalization of the model for naturally occuring errors) plus the dataset is small.
+
+- Wikiedits. 
+	issue (1) Some review had a negative opinion about usage of wikiedits. (2) The tokenizer and segmenter used in wikiedits pipeline are from stanford nlp ML model on a ConLL dataset. (3) ERRANT is used to filter out morphological errors. The problem is this can lead to overfit on those features.
+	
+	solution (1) we will use it since its the most widely used natural source of error and 		majority of research of GEC for low resource languages has been done around it. The 		negative review is probably due to lack of a rigorous framework 
+	(2) we will also try some new transformer model (bidirectional-LSTM) for POS tagger
+	(3) The solution is to train the model on all kinds of revisions, and then fine-tune it 	 	on the datasets that are less natural. This way, the model better generalizes the data
+
+
+===============================================================================
+
+Datasets:
+(1) wikipedia corpus
+(2) wikiedits corpus (probably we should choose to only use this. The reason is that if we use 1 alongside this, then data will overlap, which may cause unexpected results
+(2) Urdu dataset from (Bushra et al) which contains a very large vocab of 500k words
+(2) Urdu UDTB dataset used for stanford nlp POS tagger model. This is high variant data like wikipedia therefore recommended
+(5) IMDB reviews. This dataset is naunced and does not have the generic features
+(6) Rekhta. The prev work scrapped only children stories. The children stories dataset may compliment wikipedia dataset but stand alone, it can be problematic due to easier language used. Extended scraping can help
+
+Note: state of the art models DL in English requires datasets in order of millions. These datasets kind of use exhaustive strategies (overfitting, (my assumption)) rather than generalization
+
+===============================================================================
+
+Techniques for Error infliction
+(1) Round-trip translation using Japanese, English, Russian, German, etc as bridge languages as these are high resource. Potential flaw highlighted in this approach is that the errors will be more of those which the translation models are more prone to and will not follow the natural human GEC distribution. One mitigation is to use the wikipedia edits with similar source and targets for this purpose, and stochastically introduce spelling mistakes, and mistakes found in wikipedia edits. This strategy is highlighted in Jared et al.
+(2) Improve the error infliction strategies for morpholigical erros as discussed above
+(3) wikiedits human eror generation. Requires improvement in the pipeline. Replace tokenizers and other components to be more sophisticated for urdu datasets that contain english words and numbers.
+(4) stochastic infliction based on distribution of errors in wikiedits on other datasets. This can improve generalization. However, its unclear right now how it can be achieved.
+(5) probabilistic infliction of spelling and punctuation mistakes based on insertion, deletion, substitution
+
+
+===============================================================================
+
+Issues identified in reviews:
+- The biggest contribution is actually data collection and compilation, but the paper is not clear on that
+- The technique of error inflection is very simple
+- The data organisation is also poor, not much metadata for a reviewer to validate your data collection
+- The types of errors don't cover all types
+- Dataset is overall small, synthetic one is also not that big (which i think is the primary reason for using less error types)
+- Model is old. [But I think the direction of the paper was incorrect overall, more focus was given on training (model, etc. I think a table would suffice), less on Error generation and results with different strategies]
+- Using wikiedits for testing. (this can be since, testing on artificially data itself doesn't prove it would generalize well for natural human mistakes distribution.
+
+===============================================================================
+
+State of art strategies:
+(1) Iterative decoding as introduced in Jared et al
+(2) Write encoder and decoder yourself.
+(3) Ensemble of models outperforms single models
+
+Other Resources:
+(1) Urduhack - tokenizer, POS tagger, lemmatizer
+(2) ERRANT - given a source and target, tells what type of error correction has been done
+(3) Wikiedits - extract wikipedia revision history
+(4) Wikiextract - extract wikipedia corpus
+(4) Stanford NLP - ML models for POS tagger

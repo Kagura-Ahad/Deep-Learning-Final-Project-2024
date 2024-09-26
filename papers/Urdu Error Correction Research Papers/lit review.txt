@@ -1,0 +1,65 @@
+Corpora Generation for Grammatical Error Correction
+(Jared et al)
+
+- The Wikipedia Revision source is primarily since it benefits from the broad scope of topics in wikipedia. 
+
+- First strategy of data generation from Wikipedia source is to use the edits itself. The edits benefit from the more accurate distribution of natural grammatical errors made by humans. However, this source will contain topics that are highly popular and the result can get skewed in favor of those pages. To mitigate this they discard pages that exceed 64 mb.  To prevent remaining large pages from skewing the dataset towards their topics with their many revisions, the authors downsample consecutive revisions from individual pages, selecting only log1.5(n) pairs for a page with a total of n revisions. This reduces the total amount of data 20-fold. Texts are aligned (using a min-edit rule (unsure)), and cuts are introduced at random position and source target pairs are generated. Spelling errors are introduced probabilistically in the source sequences at a rate of 0.003 per character, randomly selecting deletion, insertion, replacement, or transposition of adjacent characters for each introduced error.
+
+- Round trip translation is used by creating a corrupted dataset using each bridge languages. French (Fr), German (De), Japanese (Ja) and Russian (Ru) as bridge languages because they are high-resource languages and relatively dissimilar from each other. Spelling errors are introduced probabilistically (insertion, deletion, transposition each with 0.005/3). Additional corruption is stochastically introduced using common errors identified in Wikipedia **(jennifer et al). 
+
+- The round-trip translation are relatively clean, but only represent subset of real-world errors. In contrast, the Wikipedia data likely has good coverage of the domain of real-world grammatical errors, but is polluted by significant noise.
+
+- ***ITERATIVE DECODING: Using incremental edits produces a significant improvement in performance over single-shot decoding for models trained on the Wikipedia revision data, a highly noisy corpus, while models trained on the relatively clean round-trip translation data see no improvment.
+
+- The authors pretrain the model on the above wikipedia revision dataset (both methods) and then fine tune the model on a lang-8 dataset which is a parallel corpus for GEC but with high noise,  Wikipedia-derived data are demonstrated to benefit significantly from finetuning on Lang-8(Tables 6 and 7). How does it help? The wikipedia revision dataset contains corrections that are outside the scope of GEC. Finetuning on noisy (target may still contain errors), helps the model to only make conservative edits that fall under scope of GEC.
+
+- The model trained on all data (types of synthetic data above) performs best. (author tries validation on the JFLEGset)
+
+- Ensemble of models outperforms all single models (each trained on a single corpus).
+
+
+
+GenERRate: Generating Errors for Use in Grammatical Error Detection
+(Jennifer et al)
+
+- The paper refers to another paper which says "Artificial error data has also proven useful in
+ the automatic evaluation of error detection systems. Bigert (2004)"
+- An error infliction tool GenERRate is introduced which prbabilistically generates of POS insertion, deletion, substitution, etc and shows its limitations and scenarios where it performs good. The hueristics used in this paper can help us in the POS (morphological) error generation
+
+- **(jared et al) The error generation setup is as follows. They analyse a corpus of errors by hand and compile an erro analysis file with 89 errors. d. The most frequent errors are those involving a change in noun or verb number or an article deletion. GenERRate then applies this error analysis file to 440,930 BNC sentences resulting in the same size set of synthetic examples (“new-ungram-BNC”)
+
+- The results of the above method show a positive impact on accuracy and recall. analysing a small set of data from the test domain, automatically creates more effective training data. This is useful in a scenario where a small-to-medium-sized learner corpus is available but which is not large enough to be split into a training/development/test set
+
+- The above strategy is similar to the one in (jared et al) which used analysed wikipedia revisions to introduce errors into the identical source targe pairs
+
+- *The paper uses another corpus for student examinations. The synthetic data underperforms and its performance is explained by the fact that the orignal data contained spelling issues whereas the augmented data did not contain those. This encourages us to model spelling mistakes in error generation as presented in (jared et al)
+
+- Using a mix of natural and synthetic data recovers much of the performance loss. "It is promising, however, that much of the performance degradation is recovered when a mixture of the two types of ungrammatical training data is used, suggesting that artificial data could be used to augment naturally occurring training sets"
+
+- The limitations of their software GenERRate discusses covert errors (errors that fall outside the scope of conventional GEC such as sentence structure improvements). However, (jared et al) paper implicitly handles covert errors and better generalizes by just using the wikiedits large corpus of revisions and enriching it with spelling issues. And also adding other data based on this error distribution. 
+
+- The limitations of their software also discusses complex errors, similar to Iterative decoding method in (jared et al). Errors that need more than one GEC transformation. Example: (She is one of reason I became interested in English → She is one of the reasons I became interested in English)
+
+
+
+Generating Inflectional Errors for Grammatical Error Correction in Hindi
+
+-  Today, most approaches for solving this problem highlight statistical and deep learning methods as opposed to rulebased methods. These methods treat GEC as a translation task, from an ungrammatical to a grammatically correct form of the same language (Brockett et al., 2006). 
+
+- As opposed to stochastic approached used in (jared et al) and (jennifer et al), thispaper creates a parallel corpus of synthetic errors by inserting errors into grammaticallycorrect sentences using a rulebased process, focusing specifically on inflectional errors.
+
+- This paper discusses that  Hindi is a fusional language that expresses grammatical features like case, gender, number, tense, etc. via morphological changes. It later indicates that this can be extended to other Indic languages like Urdu.
+
+- This paper also uses wikipedia revision edits similar to (jared et al)
+
+- This paper compares transformers with other pretrained models like MLConv and CopyAug. It is shown that the simpler Transformer model is significantly outperformed by the other two models. This encourages us to explore latest state of the art models
+
+- This paper uses subset of errors in GEC (conventional)  However, the paper says that other complex erros (as discussed in jennifer et al and jared et al) prove to be a valuable source of natural Hindi spelling errors, which can be used to circumvent
+ the dataset problems faced by Etoori et al
+
+
+A Tagged Corpus and a Tagger for Urdu
+
+Total sentences 5M
+tokens 95 M
+vocab 500k
