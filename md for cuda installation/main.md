@@ -48,6 +48,14 @@ To activate the conda environment:
 conda activate UGEC 
 ```
 This command activates the UGEC conda environment.
-## 7. Install Required Packages
-To install required packages in the conda environment:
+## 7. Install NVIDIA Toolkit
+To install the NVIDIA toolkit:
 ```bash
+conda install -c nvidia cuda-nvcc
+```
+This command installs the NVIDIA CUDA toolkit in the conda environment.
+## 8. Install CUDA Installation
+To install CUDA:
+```bash
+conda install -c "nvidia/label/cuda-11.3.0" cuda-nvcc
+```
