@@ -59,3 +59,20 @@ To install CUDA:
 ```bash
 conda install -c "nvidia/label/cuda-11.3.0" cuda-nvcc
 ```
+This command installs the CUDA toolkit version 11.3.0 in the conda environment.
+## 9. Verify CUDA Installation
+To verify the CUDA installation:
+```bash
+nvcc --version
+```
+This command displays the installed CUDA version.
+## 10. Install Anaconda Toolkit
+To install the Anaconda toolkit:
+```bash
+conda install -c anaconda cudatoolkit
+```
+## 10. Install Pytorch and other
+To install Pytorch and other libraries:
+```bash
+conda install pytorch torchvision torchaudio pytorch-cuda -c pytorch -c nvidia
+```
