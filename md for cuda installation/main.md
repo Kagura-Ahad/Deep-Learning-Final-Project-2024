@@ -39,13 +39,13 @@ bash Anaconda3-2022.05-Linux-x86_64.sh
 ## 5. Create a New Conda Environment
 To create a new conda environment:
 ```bash
-conda create --name UGEC
+conda create --name UGEC python=3.11
 ```
 This command creates a new conda environment named UGEC.
 ## 6. Activate the Conda Environment
 To activate the conda environment:
 ```bash
-conda activate UGEC
+conda activate UGEC 
 ```
 This command activates the UGEC conda environment.
 ## 7. Install Required Packages
