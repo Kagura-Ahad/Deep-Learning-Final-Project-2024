@@ -76,3 +76,17 @@ To install Pytorch and other libraries:
 ```bash
 conda install pytorch torchvision torchaudio pytorch-cuda -c pytorch -c nvidia
 ```
+This command installs Pytorch and related libraries in the conda environment.
+## 11. Test the installations
+To test the installations:
+```bash
+python -c "import torch; print(torch.cuda.is_available())"
+```
+This command checks if Pytorch is installed correctly and if the GPU is available for computations.
+
+## 12. Print GPU name
+To print the GPU name:
+```bash
+python -c "import torch; print(torch.cuda.get_device_name(0))"
+```
+This command prints the name of the GPU available for computations.
