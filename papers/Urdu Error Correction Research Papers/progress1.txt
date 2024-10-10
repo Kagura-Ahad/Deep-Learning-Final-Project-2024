@@ -60,3 +60,4 @@ Other Resources:
 (3) Wikiedits - extract wikipedia revision history
 (4) Wikiextract - extract wikipedia corpus
 (4) Stanford NLP - ML models for POS tagger
+(6) https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/data_generators/wiki_revision.py
